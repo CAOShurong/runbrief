@@ -1,20 +1,21 @@
 ---
 name: runbrief
-description: Wrap test/build/lint commands so the full log stays on disk and the agent transcript only gets a short tail.
+description: Wrap noisy test/build/lint commands so the full log stays on disk and the transcript only gets a short tail.
 ---
 
 # runbrief
 
-Coding-agent transcripts die when `pytest` or a compiler dumps thousands of
-lines into context. Run those commands through `runbrief`.
+Use this for commands that often dump hundreds of lines (`pytest`, compilers,
+linters, package installs). Do not wrap interactive or TTY tools.
 
 ```bash
 runbrief pytest -q
 runbrief --lines 20 -- npm test
 ```
 
-You get: exit code, duration, line count, path to the full log, last N lines.
-Read the file at `full:` only if you need more than the tail.
+The printed block is: exit code, duration, line count, `full:` log path, last N
+lines. Open that file if the tail is not enough. Do not re-run the same command
+without `runbrief` just to see the rest.
 
-Do not re-run the same command without `runbrief` "to see the rest" unless
-the tail is actually insufficient. Open the log file instead.
+`--` is required when the child has flags. `--lines` and `--dir` are the only
+`runbrief` flags.

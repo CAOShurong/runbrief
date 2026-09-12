@@ -1,22 +1,14 @@
+import sys
 from pathlib import Path
 
 from runbrief.cli import main, run_brief
 
-SCRATCH = Path(__file__).resolve().parent / "_scratch"
 
-
-def _scratch() -> Path:
-    SCRATCH.mkdir(parents=True, exist_ok=True)
-    return SCRATCH
-
-
-def test_run_brief_writes_log_and_tail():
-    log_dir = _scratch() / "t1"
-    log_dir.mkdir(exist_ok=True)
+def test_run_brief_writes_log_and_tail(tmp_path: Path):
     code, log_path, summary = run_brief(
-        ["python", "-c", "print('keep-me'); print('tail-line')"],
+        [sys.executable, "-c", "print('keep-me'); print('tail-line')"],
         lines=1,
-        log_dir=log_dir,
+        log_dir=tmp_path,
     )
     assert code == 0
     text = log_path.read_text(encoding="utf-8")
@@ -28,25 +20,41 @@ def test_run_brief_writes_log_and_tail():
     assert log_path.name in summary
 
 
-def test_nonzero_exit():
-    log_dir = _scratch() / "t2"
-    log_dir.mkdir(exist_ok=True)
+def test_nonzero_exit(tmp_path: Path):
     code, _log, summary = run_brief(
-        ["python", "-c", "raise SystemExit(7)"],
+        [sys.executable, "-c", "raise SystemExit(7)"],
         lines=10,
-        log_dir=log_dir,
+        log_dir=tmp_path,
     )
     assert code == 7
     assert "exit 7" in summary
+
+
+def test_stderr_is_logged_after_marker(tmp_path: Path):
+    code, log_path, summary = run_brief(
+        [sys.executable, "-c", "import sys; print('out'); print('err', file=sys.stderr)"],
+        lines=10,
+        log_dir=tmp_path,
+    )
+    assert code == 0
+    text = log_path.read_text(encoding="utf-8")
+    assert "--- stderr ---" in text
+    assert "out" in text
+    assert "err" in text
+    assert "err" in summary
 
 
 def test_main_requires_command():
     assert main([]) == 2
 
 
-def test_main_forwards_exit():
-    log_dir = _scratch() / "t3"
-    rc = main(["--dir", str(log_dir), "--", "python", "-c", "print(1)"])
+def test_main_forwards_exit(tmp_path: Path):
+    rc = main(["--dir", str(tmp_path), "--", sys.executable, "-c", "print(1)"])
     assert rc == 0
-    logs = list(log_dir.glob("*.log"))
+    logs = list(tmp_path.glob("*.log"))
     assert len(logs) == 1
+
+
+def test_main_missing_executable(tmp_path: Path):
+    rc = main(["--dir", str(tmp_path), "--", "runbrief-no-such-cmd-xyz"])
+    assert rc == 1

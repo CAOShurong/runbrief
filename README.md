@@ -1,6 +1,8 @@
 # runbrief
 
-**Agents should not eat a 4 000-line pytest dump. Run the command through `runbrief`: full log on disk, last 40 lines in the transcript.**
+[![ci](https://github.com/CAOShurong/runbrief/actions/workflows/ci.yml/badge.svg)](https://github.com/CAOShurong/runbrief/actions/workflows/ci.yml)
+
+**Agents should not eat a 4 000-line pytest dump.** Wrap the command: full log on disk, last 40 lines in the transcript.
 
 ```bash
 pip install git+https://github.com/CAOShurong/runbrief.git
@@ -14,11 +16,11 @@ full: .runbrief/20260913T012000Z-pytest.log
 FAILED tests/test_cli.py::test_foo
 ```
 
-This is **context control**, not a test runner. The child process is unchanged;
-only what the coding agent *sees* is shortened. Open the file at `full:` when
-the tail is not enough.
+This is **context control**, not a test runner. The child is unchanged; only
+what the coding agent *sees* is shortened. Open the file at `full:` when the
+tail is not enough.
 
-A skill file for Claude / Grok / Cursor is in [`skills/runbrief/SKILL.md`](skills/runbrief/SKILL.md).
+Skill file: [`skills/runbrief/SKILL.md`](skills/runbrief/SKILL.md).
 
 ## Flags
 
@@ -28,7 +30,10 @@ runbrief --dir .runbrief -- npm test
 ```
 
 `--` stops `runbrief` from eating the child's flags. Exit code is the child's
-exit code. Stdout and stderr are both in the log (stderr after a marker).
+exit code. Stdout and stderr both go in the log (stderr after `--- stderr ---`).
+
+`--lines` and `--dir` are the only flags. There is no JSON mode, no live
+follow, no sandbox.
 
 ## Why this and not `pytest -q`
 
@@ -36,6 +41,7 @@ Quiet mode still dumps failures in full. Agents then paste the dump into the
 next turn. `runbrief` always has a hard line budget for the transcript.
 
 Not a sandbox. Not an MCP server. Not a harness. One process, no dependencies.
+The child is not rewritten, stubbed, or timeout-killed.
 
 ## Install the skill
 

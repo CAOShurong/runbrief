@@ -1,9 +1,9 @@
 ---
 schema_version: portable-project-memory/v1
-handoff_revision: 1
-updated_at: "2026-09-13T01:45:00+08:00"
+handoff_revision: 2
+updated_at: "2026-09-13T00:40:00+08:00"
 updated_by: "grok-unattended"
-base_revision: git:82af493
+base_revision: git:d789192
 status: active
 ---
 
@@ -16,15 +16,16 @@ short tail so coding-agent transcripts do not swallow pytest dumps.
 
 ## Confirmed state
 
-- https://github.com/CAOShurong/runbrief public, `82af493`
-- 4 tests passed locally (Windows; tmp_path avoided).
-- Skill: `skills/runbrief/SKILL.md`
+- https://github.com/CAOShurong/runbrief public
+- CI was red: setuptools rejected `License :: OSI Approved :: MIT License`
+  alongside `license = "MIT"`. Classifier removed.
+- Tests no longer share `tests/_scratch` (leftover logs made `len(logs)==1` fail).
 
 ## Next actions
 
-1. CI green on GitHub Actions.
-2. Keep README honest. Do not turn this into a harness or MCP server.
-3. ~90% then stop grinding flags.
+1. Confirm CI green after this push.
+2. Keep README honest. Do not add flags, JSON, MCP, or a harness.
+3. Stop grinding at ~90%.
 
 ## User decisions required
 

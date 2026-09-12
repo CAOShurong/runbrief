@@ -9,11 +9,11 @@ description = "Run a command; keep the full log on disk; print a short tail to t
 readme = "README.md"
 requires-python = ">=3.9"
 license = "MIT"
+license-files = ["LICENSE"]
 authors = [{ name = "Shurong Cao", email = "170531907+CAOShurong@users.noreply.github.com" }]
 keywords = ["ai-agents", "context", "cli", "pytest", "logging"]
 classifiers = [
     "Programming Language :: Python :: 3",
-    "License :: OSI Approved :: MIT License",
 ]
 dependencies = []
 
