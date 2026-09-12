@@ -1,9 +1,9 @@
 ---
 schema_version: portable-project-memory/v1
-handoff_revision: 2
-updated_at: "2026-09-13T00:40:00+08:00"
+handoff_revision: 3
+updated_at: "2026-09-13T00:50:00+08:00"
 updated_by: "grok-unattended"
-base_revision: git:d789192
+base_revision: git:90024cd
 status: active
 ---
 
@@ -16,16 +16,14 @@ short tail so coding-agent transcripts do not swallow pytest dumps.
 
 ## Confirmed state
 
-- https://github.com/CAOShurong/runbrief public
-- CI was red: setuptools rejected `License :: OSI Approved :: MIT License`
-  alongside `license = "MIT"`. Classifier removed.
-- Tests no longer share `tests/_scratch` (leftover logs made `len(logs)==1` fail).
+- https://github.com/CAOShurong/runbrief public, `90024cd` CI green
+- Description + topics set. README sample is a real capture, not a fake pytest dump.
+- No extra flags. Do not add JSON/MCP/harness.
 
 ## Next actions
 
-1. Confirm CI green after this push.
-2. Keep README honest. Do not add flags, JSON, MCP, or a harness.
-3. Stop grinding at ~90%.
+1. Confirm CI still green after this docs/test/CI bump.
+2. Stop grinding flags (~90%). Next loop: another AI-context topic.
 
 ## User decisions required
 

@@ -9,11 +9,17 @@ pip install git+https://github.com/CAOShurong/runbrief.git
 runbrief pytest -q
 ```
 
+Captured locally wrapping a 50-line command that exits 1 (`runbrief --lines 5`):
+
 ```text
-runbrief: exit 1  2.41s  812 lines
-full: .runbrief/20260913T012000Z-pytest.log
---- last 40 of 812 lines (772 omitted) ---
-FAILED tests/test_cli.py::test_foo
+runbrief: exit 1  0.05s  50 lines
+full: .runbrief/20260912T164838Z-python-_demo.py.log
+--- last 5 of 50 lines (45 omitted) ---
+line-46
+line-47
+line-48
+line-49
+line-50
 ```
 
 This is **context control**, not a test runner. The child is unchanged; only

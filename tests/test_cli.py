@@ -58,3 +58,18 @@ def test_main_forwards_exit(tmp_path: Path):
 def test_main_missing_executable(tmp_path: Path):
     rc = main(["--dir", str(tmp_path), "--", "runbrief-no-such-cmd-xyz"])
     assert rc == 1
+
+
+def test_omitted_banner(tmp_path: Path):
+    code, log_path, summary = run_brief(
+        [sys.executable, "-c", "print('\\n'.join('L%d' % i for i in range(10)))"],
+        lines=3,
+        log_dir=tmp_path,
+    )
+    assert code == 0
+    assert "last 3 of 10 lines (7 omitted)" in summary
+    assert "L9" in summary
+    assert "L0" not in summary.split("---")[-1]
+    header = log_path.read_text(encoding="utf-8").split("---", 1)[0]
+    assert "exit: 0" in header
+    assert "command:" in header

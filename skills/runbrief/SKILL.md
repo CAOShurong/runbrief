@@ -14,8 +14,8 @@ runbrief --lines 20 -- npm test
 ```
 
 The printed block is: exit code, duration, line count, `full:` log path, last N
-lines. Open that file if the tail is not enough. Do not re-run the same command
-without `runbrief` just to see the rest.
+lines (default N=40). Open that file if the tail is not enough. Do not re-run
+the same command without `runbrief` just to see the rest.
 
 `--` is required when the child has flags. `--lines` and `--dir` are the only
 `runbrief` flags.
