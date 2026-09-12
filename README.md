@@ -1,0 +1,43 @@
+# runbrief
+
+**Agents should not eat a 4 000-line pytest dump. Run the command through `runbrief`: full log on disk, last 40 lines in the transcript.**
+
+```bash
+pip install git+https://github.com/CAOShurong/runbrief.git
+runbrief pytest -q
+```
+
+```text
+runbrief: exit 1  2.41s  812 lines
+full: .runbrief/20260913T012000Z-pytest.log
+--- last 40 of 812 lines (772 omitted) ---
+FAILED tests/test_cli.py::test_foo
+```
+
+This is **context control**, not a test runner. The child process is unchanged;
+only what the coding agent *sees* is shortened. Open the file at `full:` when
+the tail is not enough.
+
+A skill file for Claude / Grok / Cursor is in [`skills/runbrief/SKILL.md`](skills/runbrief/SKILL.md).
+
+## Flags
+
+```bash
+runbrief --lines 20 -- pytest -q
+runbrief --dir .runbrief -- npm test
+```
+
+`--` stops `runbrief` from eating the child's flags. Exit code is the child's
+exit code. Stdout and stderr are both in the log (stderr after a marker).
+
+## Why this and not `pytest -q`
+
+Quiet mode still dumps failures in full. Agents then paste the dump into the
+next turn. `runbrief` always has a hard line budget for the transcript.
+
+Not a sandbox. Not an MCP server. Not a harness. One process, no dependencies.
+
+## Install the skill
+
+Copy `skills/runbrief/SKILL.md` into `.agents/skills/runbrief/` (Grok),
+`.claude/skills/runbrief/` (Claude Code), or your agent's skill directory.
